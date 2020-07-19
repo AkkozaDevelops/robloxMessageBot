@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Messager</title>
+
+        <!-- Geting jQuery framework-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <!-- Getting the Socket.io framework -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    </head>
+    <body>
+
+        <script>
+            var socket = io();
+
+            $(function () {
+                document.getElementById("testButton").addEventListener("click", () => {
+                    socket.emit("test")
+                })
+            })
+        </script>
+
+        <input id="testButton" type="Button" value="monkey button"></input>
+    </body>
+</html>

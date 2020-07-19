@@ -1,25 +1,184 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Messager</title>
+<!DOCTYPE HTML>
+<html lang = "en">
+<head>
+  <!-- Coded by Akkoza#8767 || HTML and CSS by NovalFuzzy#9455 -->
+  <!-- Header -->
+  <title>Main Page</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+  <!-- CSS Framework-->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css">
+  <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+  <style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        font-family: "Roboto";
+    }
+    .wrapper {
+        min-height: 100%;
+        margin-bottom: -50px;
+    }
+    .footer, .push {
+        height: 50px;
+    }
+    .footerPos {
+        position: fixed;
+        bottom: 50px;
+        height: 50px;
+    }
+  </style>
+  <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+  <meta charset = "UTF-8" />
+</head>
+<!-- Body -->
+<body>
 
-        <!-- Geting jQuery framework-->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-        <!-- Getting the Socket.io framework -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
-    </head>
-    <body>
+    <script>
+      //rap == null || cookie == null || subject == null || message == null || message == null || serial == null || amount == null || premium == null
+      var socket = io();
+      $(function() {
+      document.getElementById("stop").addEventListener("click", ()=>{
+        socket.emit("stopClicked")
+      })
+      $("#actionForm").submit(function(e){
+        e.preventDefault();
+        var serial = document.getElementById("serial");
+        socket.emit("getSerialInfo", serial.value)
+        socket.on("returnSerialInfo", (info)=>{
+          document.getElementById("stats").innerHTML = info
+        })
+        socket.on("stopButtonShow", ()=>{
+          document.getElementById("stop").style = ""
+        })
+        $.ajax({
+          type: 'POST',
+          url: 'start',
+          data: {
+            rap: document.getElementById("rap").value,
+            cookie: document.getElementById("cookie").value,
+            subject: document.getElementById("subject").value,
+            message: document.getElementById("message").value,
+            serial: document.getElementById("serial").value,
+            amount: document.getElementById("amount").value,
+            premium: $("#premium").val()
+          }
+        })
 
-        <script>
-            var socket = io();
+      })
+      })
+    </script>
 
-            $(function () {
-                document.getElementById("testButton").addEventListener("click", () => {
-                    socket.emit("test")
-                })
-            })
-        </script>
-
-        <input id="testButton" type="Button" value="monkey button"></input>
-    </body>
+    <!-- Statistics Banner -->
+    <article class="message is-dark">
+        <div class="message-header">
+            <div class="container has-text-centered">
+                <p>Message Bot</p>
+            </div>
+        </div>
+        <!--<div class="message-body">
+            <div id="stats" class="container has-text-centered">
+                Add a Serial Key and Start to view this information.
+            </div>
+        </div>-->
+    </article>
+    <!-- Title Section -->
+    <section class="header">
+        <div class="container has-text-centered">
+        <h1 class="title is-1">Message Bot</h1>
+            <p>
+                
+            </p>
+        </div>
+    </section>
+    <br></br>
+    <!-- Main Section -->
+    <section class="main">
+        <div class="container">
+            <form id="actionForm" class="actionForm" action="start" method="post">
+                <div class="columns">
+                    <!-- Cookie -->
+                    <div class="column is-one-third">
+                        <div class="field">
+                            <div class="control">
+                                <label class="label"><i class="fas fa-cookie-bite"></i>
+                                    Cookie
+                                </label>
+                                <input class="input" id="cookie" name="cookie" type="password" value="" placeholder="Cookie">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Minimum RAP -->
+                    <div class="column is-one-third">
+                        <div class="field">
+                            <div class="control">
+                                <label class="label"><i class="fas fa-dollar-sign"></i>
+                                    Minimum RAP
+                                </label>
+                                <input class="input" id="rap" name="rap" type="number" value="100" placeholder="RAP">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Message Amount -->
+                    <div class="column is-one-third">
+                        <div class="field">
+                            <div class="control">
+                                <label class="label"><i class="fas fa-inbox"></i>
+                                    Message Amount
+                                </label>
+                                <input class="input" id="amount" name="amount" type="number" value="15" placeholder="Message Amount">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <!-- Subject -->
+                    <div class="column is-full">
+                        <div class="field">
+                            <div class="control">
+                                <label class="label"><i class="fas fa-heading"></i>
+                                    Subject / Title
+                                </label>
+                                <input class="input" id="subject" name="subject" type="text" value="" placeholder="Subject / Title">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <!-- Message Content -->
+                    <div class="column is-full">
+                        <div class="field">
+                            <div class="control">
+                                <label class="label"><i class="fas fa-envelope"></i>
+                                    Message Content
+                                </label>
+                                <input class="input" id="message" name="message" type="text" value="" placeholder="Content">
+                            </div>
+                        </div>
+                    </div>
+                </div>      
+                <br> <br>
+                <div class="columns is-centered">
+                    <!-- Start Button -->
+                    <div class="field">
+                        <input id="start" class="button is-info" type="Submit"></input>
+                        <input id="stop" style="display: none;" class="button is-info" type="Button" value="Stop"></input>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</body>
+<br> <br>
+<!-- Footer -->
+<footer style="margin-top:25px; margin-bottom: 0px;" class="footer "><!--footerPos-->
+    <div class="container">
+      <div class="content has-text-centered">
+        <p>
+            <strong>Made for personal use.</strong> <br>
+            Coded by Akkoza#8767 | Website by NovalFuzzy#9455
+        </p> 
+      </div>
+    </div>
+  </footer>
 </html>

@@ -4,7 +4,7 @@ var fs = global.fs;
 function logUsers(id) {
     var existingData = JSON.parse(fs.readFileSync(logFile))
     existingData.push(id)
-    fs.writeFileSync(logFile,JSON.stringify(existingData))
+    fs.writeFileSync(logFile, JSON.stringify(existingData))
 }
 
 module.exports = logUsers;

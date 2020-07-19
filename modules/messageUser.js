@@ -1,6 +1,6 @@
-await function message(playerId, subject, message, robloxsec) {
+async function message(playerId, subject, message, robloxsec) {
     await noblox.setCookie(robloxsec)
-    global.noblox.message(playerId,subject,message)
+    global.noblox.message(playerId, subject, message)
 }
 
 module.exports = message;
