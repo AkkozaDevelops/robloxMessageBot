@@ -38,8 +38,8 @@
       //rap == null || cookie == null || subject == null || message == null || message == null || serial == null || amount == null || premium == null
       var socket = io();
       $(function() {
-      document.getElementById("stop").addEventListener("click", ()=>{
-        socket.emit("stopClicked")
+      document.getElementById("reip").addEventListener("click", ()=>{
+        socket.emit("reloadIPs")
       })
       $("#actionForm").submit(function(e){
         e.preventDefault();
@@ -162,7 +162,7 @@
                     <!-- Start Button -->
                     <div class="field">
                         <input id="start" class="button is-info" type="Submit"></input>
-                        <input id="stop" style="display: none;" class="button is-info" type="Button" value="Stop"></input>
+                        <input id="reip" class="button is-info" type="Button" value="Reload IP Config"></input>
                     </div>
                 </div>
             </form>

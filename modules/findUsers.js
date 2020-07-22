@@ -11,7 +11,7 @@ async function getOwners(itemId, cursor) { // needs replaced, errors on the seco
         }
 
         if (itemOwners.nextPageCursor) {
-            getOwners(itemOwners.netPageCursor);
+            getOwners(itemOwners.nextPageCursor);
         }
     } else {
         let itemResponse = await global.fetch(`https://inventory.roblox.com/v2/assets/${itemId}/owners?sortOrder=Asc&limit=100&cursor=${cursor}`)
@@ -23,12 +23,12 @@ async function getOwners(itemId, cursor) { // needs replaced, errors on the seco
         }
 
         if (itemOwners.nextPageCursor) {
-            getOwners(itemId, itemOwners.netPageCursor);
+            getOwners(itemId, itemOwners.nextPageCursor);
         }
     }
 }
 
-async function findUsers() {
+async function findUsers(cookie) {
 
     allOwners = []
 
@@ -42,17 +42,24 @@ async function findUsers() {
 
     var itemId = randomItem._id
 
-    let itemResponse = await global.fetch(`https://inventory.roblox.com/v2/assets/${itemId}/owners?sortOrder=Asc&limit=100`)
+    var headers = {
+        'Cookie': `.ROBLOSECURITY=${cookie}`
+    }
+
+    let itemResponse = await global.fetch(`https://inventory.roblox.com/v2/assets/${itemId}/owners?sortOrder=Asc&limit=100`, {method: 'GET', headers: headers})
     let itemOwners = await itemResponse.json();
 
     for (i = 0; i < itemOwners.data.length; i++) {
-        allOwners.push(itemOwners.data[i]);
-        console.log(allOwners.length)
+        //console.log(itemOwners.data[i])
+        if (itemOwners.data[i].owner != null) {
+            allOwners.push(itemOwners.data[i].owner["id"]);
+            //console.log(allOwners.length)
+        }
     }
 
     //await getOwners(randomItem._id)
     //console.log("owners: " + allOwners.length)
-
+    //console.log(allOwners)
     return allOwners
 
 }
