@@ -6,6 +6,8 @@ var fetch = require('node-fetch'); // used instead of https for GET requests
 var noblox = require('noblox.js'); // used for messaging api
 var AccessControl = require('express-ip-access-control'); // used to whitelist ips
 
+global.rateLimited = false;
+
 // setting up website app + server
 
 var accessController = {
@@ -34,6 +36,7 @@ var server = app.listen(8080);
 const http = require('http').createServer(app)
 
 process.on('unhandledRejection', (error, promise) => {
+    global.rateLimited = true
     console.log(' Oh Lord! We forgot to handle a promise rejection here: ', promise);
     console.log(' The error was: ', error);
 });
@@ -53,69 +56,11 @@ var io = require('socket.io').listen(server);
 
 io.on('connection', (socket) => {
 
-    socket.on("test", (info) => {
-        var cookie = "_|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_1C22E15F2A78D87BA79C6C45F4993555D338F8CED44347420C4F1C8FE7777FEE41329F6280E3E53AD2F159D1BFC7F1BDC43F740BC97B405A566A297BEC13C34C891DB7335080D2590E28DD413E5BBA5CD75E52CE817E12A580E0DB689F9385448176F4D8E885EECAE33E132F3DA37C2291BB24D3C2549CBBFC4FE8A034FC70CD4A7A0F0C044922D3B03056F2459E28EA9FB7353E2970F93CCF4086316949FE792E35092EC8F987EB66DB3AFF810BAC9001B7525AF04DC588D01CA22D5DC62A467DC4980097034C872F6C550161FA3B002BB42E8C94C95FD575ACD4BB1F56DC533032709C5C24A36267CDEF368B3E70BD1F72A83608543D72DB69B1FE63B15B80EC676F783EA80BB98E6A339BBEFE5457ED1555E995CE8D34680B8242C7DF03CDA990438E"
-        console.log("monkey")
+    socket.on("start", (info) => {
 
-        function afterLoop(operations, totalOperations, data) {
-            //console.log(`${operations}\n${totalOperations}\n${data}`)
-            if (operations == totalOperations) {
-                continueAfter(data)
-            }
-        }
-
-        async function run() {
-            var tomessage = []
-
-            let users = await findUsers(cookie);
-            console.log("bonk")
-            
-            for (i = 0; i < users.length; i++) {
-                var user = users[i]
-                console.log(i)
-                checkRap(user, function callback(rap) {
-                    if (rap >= 0) {
-                        tomessage.push(user)
-                        //message(user,"this is a test", "thank you for cooperating", "_|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_818E8CB4ACD73F97793DA993F86434B745C3662B68FB320B525793CC80317038B7B54FECDE6BC13FB10AA43F0864F1A34CE3C111600DD920DABE62FB8BD863A500F1965ECDD0EA3EECFD6666EEE4CB59E140C41096E90DA2C57BDB70EE4514B950A7676FD49825592166AFD7B9BD13498B7EA9D04565601E09BC5541D5AB300DCDD82B4BF95A2C84BF28AD45B2C13D82BB89E48EDC49BCA86E9C34C20760C606E5A884765E835223B99C08114857341F3DC0FDBBF003960B5186227AE53CD532DD363AB119BEC096B30C16E068D5D1AA42E686DD4FE13889AC4F64FE70698177E15905B101716F9A6767CF637C5318B27A96E28EAED3309226872A2F7B76378043C1AF2922DED4EED5AD2FACC7860E6A41DBC2B6D1911C6EC278EF33C3D4CD98791BF1B2")
-                        
-                    }
-                })
-                afterLoop(i,users.length,tomessage)
-            }
-        }
-
-        async function continueAfter(data) {
-            console.log("nyoom")
-            var int = 0;
-
-            function loop() {
-                setTimeout(function(){
-                    if (int != data.length) {
-                        var uId = data[int]
-                        console.log("messaging " + uId + ".")
-                        message(uId,"this is a test", "thank you for your cooperation.",cookie)
-                        int += 1
-                        loop();
-                    } else {
-                        console.log("finished.")
-                    }
-                },5000)
-            }
-
-            loop();
-        }
-
-        run()
     })
 
 })
-
-// getting actual modules
-
-var logUser = require(`${__dirname}/modules/logUsers.js`);
-var message = require(`${__dirname}/modules/messageUser.js`)
-var findUsers = require(`${__dirname}/modules/findUsers.js`)
-var checkRap = require(`${__dirname}/modules/checkRap.js`)
 
 // push stuff to global
 
@@ -125,14 +70,27 @@ global.https = https;
 global.fetch = fetch;
 global.noblox = noblox;
 global.mainDir = __dirname
+global.app = app;
 
 // functions
 global.unRequire = unRequire;
+
+// getting variables because yuh
+
+// getting actual modules
+
+var logUser = require(`${__dirname}/modules/logUsers.js`);
+var message = require(`${__dirname}/modules/messageUser.js`)
+var findUsers = require(`${__dirname}/modules/findUsers.js`)
+var checkRap = require(`${__dirname}/modules/checkRap.js`)
+var sitePostRequest = require(`${__dirname}/modules/sitePostRequest.js`)();
 
 // script modules
 global.logUser = logUser;
 global.message = message;
 global.findUsers = findUsers;
+global.checkRap = checkRap;
+global.sitePostRequest = sitePostRequest;
 
 // have server use the website
 

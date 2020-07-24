@@ -2,7 +2,7 @@
 async function checkRap(uId, callback) {
     var rap = 0
     var knownUsers = global.unRequire(global.mainDir + "/logs/messagedUsers.json")
-    console.log(uId)
+    //console.log(uId)
     let player = await global.fetch(`https://inventory.roblox.com/v1/users/${uId}/assets/collectibles?limit=100&sortOrder=Asc`)
     let playerItems = await player.json()
     //console.log(player)
@@ -18,9 +18,9 @@ async function checkRap(uId, callback) {
             rap += item.recentAveragePrice
         })
 
-        if (callback) {callback(rap)}
+        if (callback) {callback({statusCode: 300, rap: rap})}
     } else {
-        if (callback) {callback(0)}
+        if (callback) {callback({statusCode: 0, rap: null})}
     }
 }
 

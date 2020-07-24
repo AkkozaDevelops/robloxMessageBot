@@ -37,20 +37,14 @@
     <script>
       //rap == null || cookie == null || subject == null || message == null || message == null || serial == null || amount == null || premium == null
       var socket = io();
-      $(function() {
-      document.getElementById("reip").addEventListener("click", ()=>{
-        socket.emit("reloadIPs")
-      })
+
+        socket.on("started", (data) => {
+            document.getElementById("start").innerHTML("Started")
+            document.getElementById("start").style = "pointer-events: none;"
+        })
+
       $("#actionForm").submit(function(e){
         e.preventDefault();
-        var serial = document.getElementById("serial");
-        socket.emit("getSerialInfo", serial.value)
-        socket.on("returnSerialInfo", (info)=>{
-          document.getElementById("stats").innerHTML = info
-        })
-        socket.on("stopButtonShow", ()=>{
-          document.getElementById("stop").style = ""
-        })
         $.ajax({
           type: 'POST',
           url: 'start',
@@ -59,14 +53,12 @@
             cookie: document.getElementById("cookie").value,
             subject: document.getElementById("subject").value,
             message: document.getElementById("message").value,
-            serial: document.getElementById("serial").value,
-            amount: document.getElementById("amount").value,
-            premium: $("#premium").val()
+            amount: document.getElementById("amount").value
           }
         })
 
       })
-      })
+
     </script>
 
     <!-- Statistics Banner -->
@@ -162,7 +154,7 @@
                     <!-- Start Button -->
                     <div class="field">
                         <input id="start" class="button is-info" type="Submit"></input>
-                        <input id="reip" class="button is-info" type="Button" value="Reload IP Config"></input>
+                        <!--<input id="reip" class="button is-info" type="Button" value="Reload IP Config"></input>-->
                     </div>
                 </div>
             </form>
