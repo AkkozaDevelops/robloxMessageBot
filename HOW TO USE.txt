@@ -1,0 +1,4 @@
+TO USE, YOU MUST OPEN PORT 8080 ON YOUR ROUTER
+After you open the port, you can open the run.bat file
+Once you run the run.bat file, you will be able to connect to the server through <your ip>:8080
+You may have to whitelist your local ip in the whitelisted_ips.json file.
